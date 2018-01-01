@@ -3,4 +3,4 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/guacamoledragon/dbl-server-count/compare/<initial-commit>...HEAD
+[Unreleased]: https://github.com/guacamoledragon/dbl-server-count/compare/00482e2...HEAD
