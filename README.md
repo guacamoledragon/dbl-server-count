@@ -1,19 +1,19 @@
 # dbl-server-count
 > Updates Discord bot server count on [Discord Bots List](https://discordbots.org/).
 
-## Installation
-
-    TODO
-
 ## Usage
 
-FIXME: explanation
+    $ lein run credentials.edn
 
-    $ java -jar dbl-server-count-0.1.0-standalone.jar [args]
+Sample `credentials.edn` file
 
-## Options
-
-FIXME: listing of options this app accepts.
+```clojure
+{:bot              {:token "..."
+                    :id    "..."}
+ :discord-bot-list {:token "..."}
+ :discord-bots-gg  {:token "..."
+                    :url   "https://discord.bots.gg/api/v1/"}}
+```
 
 ## License
 

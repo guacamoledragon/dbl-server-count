@@ -38,21 +38,24 @@
     (onReady [^ReadyEvent event]
       ()
       (let [shard         (.. event getJDA)
-            shard-manager (.. shard getShardManager)]
+            shard-manager (.. shard getShardManager)
+            shard-string  (.. shard getShardInfo getShardString)]
         ;; wait until all shards are connected
-        (print "\n" (.. shard getShardInfo getShardString) "Waiting")
-        (flush)
-        (while (not (every? #(= "CONNECTED" %)
-                            (map #(.. % getStatus toString)
-                                 (.getShards shard-manager))))
-          (print ".")
-          (Thread/sleep 1000)
-          (flush))
+        (comment
+          ;; still not working yet
+          (print "\n" shard-string "Waiting")
+          (flush)
+          (while (not (every? #(= "CONNECTED" %)
+                              (map #(.. % getStatus toString)
+                                   (.getShards shard-manager))))
+            (print ".")
+            (Thread/sleep 1000)
+            (flush)))
         ;; Update Stats
         (let [stats {:guildCount (count (.getGuilds shard-manager))}
               {:keys [url bot-id token]} bots-gg]
 
-          (println "Ready:" (:guildCount stats))
+          (println shard-string "Ready:" (:guildCount stats))
           (update-server-stats dbl-api stats)
           (update-server url bot-id token stats))))
 
