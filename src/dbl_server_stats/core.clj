@@ -1,13 +1,15 @@
 (ns dbl-server-stats.core
-  (:require [cheshire.core :as cheshire]
-            [clj-http.client :as client]
-            [clojure.edn :as edn])
+  (:require
+   [cheshire.core :as cheshire]
+   [clj-http.client :as client]
+   [clojure.edn :as edn])
   (:gen-class)
-  (:import (org.discordbots.api.client DiscordBotListAPI$Builder DiscordBotListAPI)
-           (net.dv8tion.jda.api.hooks ListenerAdapter)
-           (net.dv8tion.jda.api.events Event ReadyEvent)
-           (net.dv8tion.jda.api.events.guild GuildJoinEvent GuildLeaveEvent)
-           (net.dv8tion.jda.api.sharding DefaultShardManagerBuilder)))
+  (:import
+   (net.dv8tion.jda.api.events Event ReadyEvent)
+   (net.dv8tion.jda.api.events.guild GuildJoinEvent GuildLeaveEvent)
+   (net.dv8tion.jda.api.hooks ListenerAdapter)
+   (net.dv8tion.jda.api.sharding DefaultShardManagerBuilder)
+   (org.discordbots.api.client DiscordBotListAPI$Builder DiscordBotListAPI)))
 
 (defn update-server
   "Sends a POST request with the new server count for the bot-id."
@@ -30,8 +32,8 @@
   [^Event event]
   (let [shards (.. event getJDA getShardManager getShards)]
     {:guildCount (reduce
-                   +
-                   (map #(.. % getGuildCache size) shards))}))
+                  +
+                  (map #(.. % getGuildCache size) shards))}))
 
 (defn listener-adapter [dbl-api bots-gg]
   (proxy [ListenerAdapter] []
@@ -81,7 +83,7 @@
                     (.botId (:id bot))
                     .build)
         bots-gg (assoc discord-bots-gg
-                  :bot-id (:id bot))]
+                       :bot-id (:id bot))]
     (-> (DefaultShardManagerBuilder/createLight (:token bot))
         (.addEventListeners (object-array [(listener-adapter dbl-api bots-gg)]))
         .build)))
@@ -108,6 +110,3 @@
     (println :shard-info (.. shard getShardInfo getShardString)))
   (.stop shard-manager)
   (count (.getGuilds shard-manager)))
-
-
-
