@@ -10,3 +10,5 @@ pom.xml.asc
 /.nrepl-port
 .idea/
 credentials.edn
+/.clj-kondo/
+/.lsp/
