@@ -62,14 +62,14 @@
           (update-server url bot-id token stats))))
 
     (onGuildJoin [^GuildJoinEvent event]
-      (let [stats (bot-stats event)
+      (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
         (println (-> event .getGuild .getName) " - joined:" (:guildCount stats))
         (update-server-stats dbl-api stats)
         (update-server url bot-id token stats)))
 
     (onGuildLeave [^GuildLeaveEvent event]
-      (let [stats (bot-stats event)
+      (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
         (println (-> event .getGuild .getName) " - left:" (:guildCount stats))
         (update-server-stats dbl-api stats)
