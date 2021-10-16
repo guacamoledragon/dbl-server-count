@@ -10,7 +10,7 @@ Sample `credentials.edn` file
 ```clojure
 {:bot              {:token "..."
                     :id    "..."}
- :discord-bot-list {:token "..."}
+ :top-gg           {:token "..."}
  :discord-bots-gg  {:token "..."
                     :url   "https://discord.bots.gg/api/v1/"}}
 ```

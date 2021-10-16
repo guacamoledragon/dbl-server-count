@@ -24,8 +24,8 @@
                       :accept       :json}))))
 
 (defn update-server-stats
-  [^DiscordBotListAPI dbl-api stats]
-  (.setStats dbl-api ^Integer (:guildCount stats)))
+  [^DiscordBotListAPI tg-api stats]
+  (.setStats tg-api ^Integer (:guildCount stats)))
 
 (defn bot-stats
   "Create stats map from the JDA api object"
@@ -35,7 +35,7 @@
                   +
                   (map #(.. % getGuildCache size) shards))}))
 
-(defn listener-adapter [dbl-api bots-gg]
+(defn listener-adapter [tg-api bots-gg]
   (proxy [ListenerAdapter] []
     (onReady [^ReadyEvent event]
       ()
@@ -58,34 +58,34 @@
               {:keys [url bot-id token]} bots-gg]
 
           (println shard-string "Ready:" (:guildCount stats))
-          (update-server-stats dbl-api stats)
+          (update-server-stats tg-api stats)
           (update-server url bot-id token stats))))
 
     (onGuildJoin [^GuildJoinEvent event]
       (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
         (println (-> event .getGuild .getName) " - joined:" (:guildCount stats))
-        (update-server-stats dbl-api stats)
+        (update-server-stats tg-api stats)
         (update-server url bot-id token stats)))
 
     (onGuildLeave [^GuildLeaveEvent event]
       (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
         (println (-> event .getGuild .getName) " - left:" (:guildCount stats))
-        (update-server-stats dbl-api stats)
+        (update-server-stats tg-api stats)
         (update-server url bot-id token stats)))))
 
 (defn -main
   [config-file & args]
-  (let [{:keys [bot discord-bot-list discord-bots-gg]} (-> config-file slurp edn/read-string)
-        dbl-api (-> (DiscordBotListAPI$Builder.)
-                    (.token (:token discord-bot-list))
-                    (.botId (:id bot))
-                    .build)
+  (let [{:keys [bot top-gg discord-bots-gg]} (-> config-file slurp edn/read-string)
+        tg-api (-> (DiscordBotListAPI$Builder.)
+                   (.token (:token top-gg))
+                   (.botId (:id bot))
+                   .build)
         bots-gg (assoc discord-bots-gg
                        :bot-id (:id bot))]
     (-> (DefaultShardManagerBuilder/createLight (:token bot))
-        (.addEventListeners (object-array [(listener-adapter dbl-api bots-gg)]))
+        (.addEventListeners (object-array [(listener-adapter tg-api bots-gg)]))
         .build)))
 
 (comment
@@ -94,7 +94,7 @@
   (def config (-> "credentials.edn" slurp edn/read-string))
   (def ^DefaultShardManager shard-manager (-> (get-in config [:bot :token])
                                               (DefaultShardManagerBuilder/createLight)
-                                              ;;(.addEventListeners (object-array [(listener-adapter dbl-api bots-gg)]))
+                                              ;;(.addEventListeners (object-array [(listener-adapter tg-api bots-gg)]))
                                               .build))
 
   (.getShardsTotal shard-manager)
