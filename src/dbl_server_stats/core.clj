@@ -59,12 +59,10 @@
             (Thread/sleep 1000)
             (flush)))
         ;; Update Stats
-        (let [stats {:guildCount (count (.getGuilds shard-manager))}
-              {:keys [url bot-id token]} bots-gg]
-
+        (let [stats (bot-stats event)]
           (println shard-string "Ready:" (:guildCount stats))
           (update-server-stats tg-api stats)
-          (update-server url bot-id token stats))))
+          (update-server bots-gg stats))))
 
     (onGuildJoin [^GuildJoinEvent event]
       (let [stats                      (bot-stats event)
