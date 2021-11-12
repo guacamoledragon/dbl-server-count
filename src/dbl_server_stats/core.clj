@@ -1,15 +1,23 @@
 (ns dbl-server-stats.core
+  (:gen-class)
   (:require
    [cheshire.core :as cheshire]
    [clj-http.client :as client]
    [clojure.edn :as edn])
-  (:gen-class)
   (:import
-   (net.dv8tion.jda.api.events Event ReadyEvent)
-   (net.dv8tion.jda.api.events.guild GuildJoinEvent GuildLeaveEvent)
-   (net.dv8tion.jda.api.hooks ListenerAdapter)
-   (net.dv8tion.jda.api.sharding DefaultShardManagerBuilder)
-   (org.discordbots.api.client DiscordBotListAPI$Builder DiscordBotListAPI)))
+   (net.dv8tion.jda.api.events
+    Event
+    ReadyEvent)
+   (net.dv8tion.jda.api.events.guild
+    GuildJoinEvent
+    GuildLeaveEvent)
+   (net.dv8tion.jda.api.hooks
+    ListenerAdapter)
+   (net.dv8tion.jda.api.sharding
+    DefaultShardManagerBuilder)
+   (org.discordbots.api.client
+    DiscordBotListAPI
+    DiscordBotListAPI$Builder)))
 
 (defn update-server
   "Sends a POST request with the new server count for the bot-id."
@@ -25,8 +33,6 @@
                        :headers      headers
                        :content-type :json
                        :accept       :json})))))
-  
-      
 
 (defn update-server-stats
   [^DiscordBotListAPI tg-api stats]
@@ -40,9 +46,11 @@
                   +
                   (map #(.. % getGuildCache size) shards))}))
 
-(defn listener-adapter [tg-api bots-gg]
+(defn listener-adapter
+  [tg-api bots-gg]
   (proxy [ListenerAdapter] []
-    (onReady [^ReadyEvent event]
+    (onReady
+      [^ReadyEvent event]
       ()
       (let [shard         (.. event getJDA)
             shard-manager (.. shard getShardManager)
@@ -64,14 +72,16 @@
           (update-server-stats tg-api stats)
           (update-server bots-gg stats))))
 
-    (onGuildJoin [^GuildJoinEvent event]
+    (onGuildJoin
+      [^GuildJoinEvent event]
       (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
         (println (-> event .getGuild .getName) " - joined:" (:guildCount stats))
         (update-server-stats tg-api stats)
         (update-server url bot-id token stats)))
 
-    (onGuildLeave [^GuildLeaveEvent event]
+    (onGuildLeave
+      [^GuildLeaveEvent event]
       (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
         (println (-> event .getGuild .getName) " - left:" (:guildCount stats))
