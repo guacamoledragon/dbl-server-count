@@ -93,23 +93,7 @@
 
 (comment
   (import '(net.dv8tion.jda.api JDA)
-          '(net.dv8tion.jda.api.sharding DefaultShardManager))
+          '(net.dv8tion.jda.api.shajding DefaultShardManager))
   (def config (-> "credentials.edn" slurp edn/read-string))
-  (def ^DefaultShardManager shard-manager (-> (get-in config [:bot :token])
-                                              (DefaultShardManagerBuilder/createLight)
-                                              ;;(.addEventListeners (object-array [(listener-adapter tg-api bots-gg)]))
-                                              .build))
-
-  (.getShardsTotal shard-manager)
-  (.getShardsQueued shard-manager)
-  (while (not (every? #(= "CONNECTED" %)
-                      (map #(.. % getStatus toString)
-                           (.getShards shard-manager))))
-    (print ".")
-    (Thread/sleep 1000)
-    (flush))
-  (doseq [^JDA shard (.getShards shard-manager)]
-    (println :status (.. shard getStatus toString))
-    (println :shard-info (.. shard getShardInfo getShardString)))
-  (.stop shard-manager)
-  (count (.getGuilds shard-manager)))
+  (def app (-main "credentials.edn"))
+  (.shutdown ^DefaultShardManager app))
