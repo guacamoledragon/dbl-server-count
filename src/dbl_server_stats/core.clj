@@ -13,15 +13,20 @@
 
 (defn update-server
   "Sends a POST request with the new server count for the bot-id."
-  [api-url bot-id token stats]
-  (let [body    (cheshire/generate-string stats)
-        headers {"Authorization" token}]
+  ([config stats]
+   (let [{:keys [url bot-id token]} config]
+     (update-server url bot-id token stats)))
+  ([api-url bot-id token stats]
+   (let [body    (cheshire/generate-string stats)
+         headers {"Authorization" token}]
 
-    (-> (str api-url "bots/" bot-id "/stats")
-        (client/post {:body         body
-                      :headers      headers
-                      :content-type :json
-                      :accept       :json}))))
+     (-> (str api-url "bots/" bot-id "/stats")
+         (client/post {:body         body
+                       :headers      headers
+                       :content-type :json
+                       :accept       :json})))))
+  
+      
 
 (defn update-server-stats
   [^DiscordBotListAPI tg-api stats]
