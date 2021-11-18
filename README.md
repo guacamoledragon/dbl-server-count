@@ -1,11 +1,17 @@
 # dbl-server-count
-> Updates Discord bot server count on [Discord Bots List](https://discordbots.org/).
+> Updates Discord bot server count on bot directories.
+
+## Supported Directories
+
+* [Discord Bots List](https://discordbots.org/)
+* [top.gg](https://top.gg/)
+* [Bots On Discord](https://bots.ondiscord.xyz) _Coming Soon..._
 
 ## Usage
 
-    $ lein run credentials.edn
+    $ lein run config.edn
 
-Sample `credentials.edn` file
+Sample `config.edn` file
 
 ```clojure
 {:bot              {:token "..."
@@ -17,7 +23,7 @@ Sample `credentials.edn` file
 
 ## License
 
-Copyright © 2018 Guacamole Dragon, LLC
+Copyright © 2021 Guacamole Dragon, LLC
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
