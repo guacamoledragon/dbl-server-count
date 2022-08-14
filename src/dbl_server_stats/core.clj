@@ -76,7 +76,7 @@
       [^GuildJoinEvent event]
       (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
-        (println (-> event .getGuild .getName) " - joined:" (:guildCount stats))
+        (println "✅" (-> event .getGuild .getName) " - joined:" (:guildCount stats))
         (update-server-stats tg-api stats)
         (update-server url bot-id token stats)))
 
@@ -84,7 +84,7 @@
       [^GuildLeaveEvent event]
       (let [stats                      (bot-stats event)
             {:keys [url bot-id token]} bots-gg]
-        (println (-> event .getGuild .getName) " - left:" (:guildCount stats))
+        (println "❌" (-> event .getGuild .getName) " - left:" (:guildCount stats))
         (update-server-stats tg-api stats)
         (update-server url bot-id token stats)))))
 
